@@ -1,4 +1,4 @@
-from flask import Flask,request,redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app= Flask (__name__)
@@ -31,27 +31,29 @@ def index():
 
       
 
-@app.route('/blog')
+@app.route('/blog', methods=['POST','GET'])
 def display_blogs():
    blog_id =request.args.get(id) 
    if (blog_id):
       blog=Blog.query.get(blog_id)
       return render_template('single_blog.html', title= 'Blog Title', blog='blog') 
    else:
-        all_blogs = Blog.query.all()   
+        all_blogs = Blog.query.all() 
+
    return render_template('all_blogs.html', title="All Blogs", all_blogs=all_blogs)
   
 @app.route('/new_blog', methods=['Post', 'GET'] )
 def new_blog_entry():
     if request.method == 'POST':
-        new_blog_title = request.form['title']   
-        new_blog_body =request.form['body']
-        new_blog_post = Blog(new_blog_title, new_blog_body)
+        new_title = request.files ['title'] 
+        new_body = request.files ['body']
+        new_post = Blog(new_title, new_body)
 
-        if new_blog_entry.is_valid():
-            db.session.add(new_blog_post)
+        if new_blog_post.is_valid():
+            db.session.add(new_post)
             db.session.commit()
-            return redirect('/')
+           # url= "/blog?id="+str(new_post.id)
+           # return redirect('url')
         else:
             flash("Please check your entry for errors or missing fields. Both title and body are required")
             return render_template('new_blog.html', title = "Create new blog entry", new_blog_title = new_blog_title,
