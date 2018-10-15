@@ -19,9 +19,9 @@
 
         <ul>
             {% for blog in blogss %}
-            <li>{{blog.name}}
+            <li>{{blog_title}}
                <form method= "post" action="/delete-blog" style="display:inline-block;">
-                    <input type="hidden" name="blog_id" value="{{blog.id}}"/>
+                    <input type="hidden" name="blog_id" value="{{blog_id}}"/>
                     <input type="submit" value="Done!"/>
                 </form>
             </li>
@@ -32,10 +32,10 @@
 
     <hr />
 
-    <h2>Completed</h2>
+    <h2>Submitted Blogs</h2>
               <ul>
                  {% for blog in completed_blogs %}
-                  <li>{{blog.name}}</li> 
+                  <li>{{'blog_title'}}</li> 
                  {% endfor %}
               </ul>
 {% endblock %}

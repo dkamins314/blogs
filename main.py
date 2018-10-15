@@ -1,21 +1,20 @@
-from flask import Flask,request,redirect, render_template, session,flash
+from flask import Flask,request,redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app= Flask (__name__)
 app.config['DEBUG']= True
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://build-a-blog:bsiyatadishmaya@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] ='mysql+pymysql://Build-a-Blog:bsiyatadishmaya@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key='56ka52dh10WQOPHT$%$%$'
 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)   
-    owner_id = db.Column(db.Integer)
-    name = db.Column(db.String(120))
+    title = db.Column(db.String(120))
     body = db.Column(db. String(1000))
 
 
-    def __init__(self, title,body):
+    def __init__(self, title, body):
         self.title = title
         self.body= body
         
@@ -25,7 +24,7 @@ class Blog(db.Model):
         else:
              return False
 
-@app.route("/")
+@app.route('/')
 def index():
     
     return redirect('/blog')
@@ -39,24 +38,23 @@ def display_blogs():
       blog=Blog.query.get(blog_id)
       return render_template('single_blog.html', title= 'Blog Title', blog='blog') 
    else:
-        all_entries = Blog.query.all()   
+        all_blogs = Blog.query.all()   
    return render_template('all_blogs.html', title="All Blogs", all_blogs=all_blogs)
   
-@app.route('/newblog', methods=['Post', 'GET'] )
+@app.route('/new_blog', methods=['Post', 'GET'] )
 def new_blog_entry():
     if request.method == 'POST':
         new_blog_title = request.form['title']   
         new_blog_body =request.form['body']
-        new_blog = Blog(new_blog_title, new_blog_body)
+        new_blog_post = Blog(new_blog_title, new_blog_body)
 
         if new_blog_entry.is_valid():
-            db.session.add(new_blog)
+            db.session.add(new_blog_post)
             db.session.commit()
-            url="blog?id=" + str(new_blog.id)
-            return redirect(url)
+            return redirect('/')
         else:
             flash("Please check your entry for errors or missing fields. Both title and body are required")
-            return render_template('newblog.html', title= "Create new blog entry", new_blog_title= new_blog_title,
+            return render_template('new_blog.html', title = "Create new blog entry", new_blog_title = new_blog_title,
                    new_blog_body = new_blog_body)
     else:
         return render_template('new_blog.html', title= "Create new blog")
